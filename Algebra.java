@@ -53,8 +53,7 @@ public class Algebra {
 		int Counter = 0;
 
 		for (int i = 0; i < x2; i++) {
-			int Counteradd = plus(x1, x1);
-			Counter = Counter + Counteradd;
+			Counter = plus(Counter, x1);
 		}
 
 		return Counter;
@@ -64,12 +63,11 @@ public class Algebra {
 	// Returns x^n (for n >= 0)
 	public static int pow(int x, int n) {
 
-		int Counter = 0;
+		int Counter = 1;
 
 		for (int i = 0; i < n; i++) {
-			int Counteradd = times(x, x);
 
-			Counter = Counter + Counteradd;
+			Counter = times(Counter, x);
 		}
 
 		return Counter;
@@ -106,7 +104,7 @@ public class Algebra {
 		if (x2 != 0) {
 
 			int x = div(x1, x2);
-			sum = x2 * x;
+			sum = times(x2, x);
 			fsum = minus(x1, sum);
 		} else {
 			return 0;
@@ -123,9 +121,9 @@ public class Algebra {
 		int n = 0;
 
 		while (x >= sum) {
-
-			sum = n * n;
 			n++;
+			sum = times(n, n);
+
 		}
 
 		return n - 1;
