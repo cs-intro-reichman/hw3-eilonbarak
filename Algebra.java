@@ -63,6 +63,21 @@ public class Algebra {
 	// Returns x^n (for n >= 0)
 	public static int pow(int x, int n) {
 
+		if (n < 0) {
+			// עבור Int, התוצאה היא שבר. נחזיר 0 כפי שמומלץ למגבלות אלו.
+			return 0;
+		}
+
+		// 2. טיפול במקרה של חזקת אפס (כל מספר בחזקת 0 הוא 1)
+		if (n == 0) {
+			return 1;
+		}
+
+		// 3. טיפול במקרה של 0 בחזקת כל מספר חיובי (0^n = 0)
+		if (x == 0) {
+			return 0;
+		}
+
 		int Counter = 1;
 
 		for (int i = 0; i < n; i++) {
@@ -76,23 +91,48 @@ public class Algebra {
 
 	// Returns the integer part of x1 / x2
 	public static int div(int x1, int x2) {
-
 		if (x2 == 0) {
-
+			return 0; // טיפול בחלוקה באפס
+		}
+		if (x1 == 0) {
 			return 0;
 		}
 
-		int quotient = 0;
-		int tempX1 = x1;
+		// 1. קביעת סימן התוצאה: אם הסימנים שונים, התוצאה שלילית
+		boolean negativeResult = (x1 < 0) != (x2 < 0);
 
-		while (tempX1 >= x2) {
-
-			tempX1 = minus(tempX1, x2);
-			quotient++; // סופרים כמה פעמים החסרנו (זו המנה)
+		// 2. עבודה עם הערכים המוחלטים (באמצעות minus)
+		int absX1;
+		if (x1 < 0) {
+			absX1 = minus(0, x1); // minus(0, x1) הוא -x1
+		} else {
+			absX1 = x1;
 		}
 
-		return quotient;
+		int absX2;
+		if (x2 < 0) {
+			absX2 = minus(0, x2);
+		} else {
+			absX2 = x2;
+		}
 
+		int quotient = 0;
+		int tempX1 = absX1;
+
+		// 3. חיסור חוזר על הערכים המוחלטים
+		while (tempX1 >= absX2) {
+			tempX1 = minus(tempX1, absX2);
+			quotient++;
+		}
+
+		// 4. החזרת התוצאה עם הסימן הנכון (באמצעות if-else מפורש)
+		if (negativeResult) {
+			// אם התוצאה צריכה להיות שלילית, הפוך את הסימן
+			return minus(0, quotient);
+		} else {
+			// אחרת, החזר את המנה החיובית שחושבה
+			return quotient;
+		}
 	}
 
 	// Returns x1 % x2
