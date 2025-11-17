@@ -154,13 +154,14 @@ public class Algebra {
 
 	}
 
-	// Returns the integer part of sqrt(x)
+	// Returns the integer part of sqrt(x)...
 	public static int sqrt(int x) {
 
 		int sum = 0;
 		int n = 0;
 
 		while (x >= sum) {
+			int r = 0;
 			n++;
 			sum = times(n, n);
 
