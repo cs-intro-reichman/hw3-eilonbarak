@@ -25,99 +25,86 @@ public class Algebra {
 
 	// Returns x1 + x2
 	public static int plus(int x1, int x2) {
-		if (x2 >= 0) {
-			for (int i = 0; i < x2; i++) {
-				x1++;
-			}
-		} else {
-			// אם x2 שלילי, אנו מחסרים את הערך המוחלט של x2
-			int absX2 = minus(0, x2);
-			for (int i = 0; i < absX2; i++) {
-				x1--;
-			}
+
+		for (int i = 0; i < x2; i++) {
+
+			x1++;
+
 		}
+
 		return x1;
 	}
 
 	// Returns x1 - x2
 	public static int minus(int x1, int x2) {
-		if (x2 >= 0) {
-			for (int i = 0; i < x2; i++) {
-				x1--;
-			}
-		} else {
-			// אם x2 שלילי, אנו מוסיפים את הערך המוחלט של x2
-			int absX2 = minus(0, x2);
-			for (int i = 0; i < absX2; i++) {
-				x1++;
-			}
+
+		for (int i = 0; i < x2; i++) {
+
+			x1--;
+
 		}
+
 		return x1;
 	}
 
 	// Returns x1 * x2
 	public static int times(int x1, int x2) {
-		if (x1 == 0 || x2 == 0) {
-			return 0;
-		}
-
-		boolean negativeResult = (x1 < 0) != (x2 < 0);
-
-		// עבודה עם הערכים המוחלטים
-		int absX1 = (x1 < 0) ? minus(0, x1) : x1;
-		int absX2 = (x2 < 0) ? minus(0, x2) : x2;
 
 		int Counter = 0;
-		for (int i = 0; i < absX2; i++) {
-			Counter = plus(Counter, absX1);
+
+		for (int i = 0; i < x2; i++) {
+			Counter = plus(Counter, x1);
 		}
 
-		return negativeResult ? minus(0, Counter) : Counter;
+		return Counter;
+
 	}
 
 	// Returns x^n (for n >= 0)
 	public static int pow(int x, int n) {
+
 		if (n < 0) {
+			// עבור Int, התוצאה היא שבר. נחזיר 0 כפי שמומלץ למגבלות אלו.
 			return 0;
 		}
+
+		// 2. טיפול במקרה של חזקת אפס (כל מספר בחזקת 0 הוא 1)
 		if (n == 0) {
 			return 1;
 		}
+
+		// 3. טיפול במקרה של 0 בחזקת כל מספר חיובי (0^n = 0)
 		if (x == 0) {
 			return 0;
 		}
 
-		// טיפול בבסיס שלילי (Test 6)
-		boolean isBaseNegative = x < 0;
-		boolean isExponentOdd = mod(n, 2) != 0;
-		boolean negativeResult = isBaseNegative && isExponentOdd;
-
-		// עבודה עם הערך המוחלט של הבסיס
-		int absX = isBaseNegative ? minus(0, x) : x;
-
 		int Counter = 1;
 
 		for (int i = 0; i < n; i++) {
-			Counter = times(Counter, absX);
+
+			Counter = times(Counter, x);
 		}
 
-		return negativeResult ? minus(0, Counter) : Counter;
+		return Counter;
+
 	}
 
-	// Returns the integer part of x1 / x2 - משתמש ב-if-else מפורש כפי שביקשת
+	// Returns the integer part of x1 / x2
 	public static int div(int x1, int x2) {
 		if (x2 == 0) {
-			return 0;
+			return 0; // טיפול בחלוקה באפס
 		}
 		if (x1 == 0) {
 			return 0;
 		}
 
+		// 1. קביעת סימן התוצאה: אם הסימנים שונים, התוצאה שלילית
 		boolean negativeResult = (x1 < 0) != (x2 < 0);
 
+		// 2. עבודה עם הערכים המוחלטים (באמצעות minus)
 		int absX1;
 		if (x1 < 0) {
-			absX1 = minus(0, x1);
+			absX1 = minus(0, x1); // minus(0, x1) הוא -x1
 		} else {
 			absX1 = x1;
 		}
@@ -132,48 +119,54 @@ public class Algebra {
 		int quotient = 0;
 		int tempX1 = absX1;
 
+		// 3. חיסור חוזר על הערכים המוחלטים
 		while (tempX1 >= absX2) {
 			tempX1 = minus(tempX1, absX2);
 			quotient++;
 		}
 
+		// 4. החזרת התוצאה עם הסימן הנכון (באמצעות if-else מפורש)
 		if (negativeResult) {
+			// אם התוצאה צריכה להיות שלילית, הפוך את הסימן
 			return minus(0, quotient);
 		} else {
+			// אחרת, החזר את המנה החיובית שחושבה
 			return quotient;
 		}
 	}
 
 	// Returns x1 % x2
 	public static int mod(int x1, int x2) {
-		if (x2 == 0) {
+
+		int sum = 0;
+		int fsum = 0;
+
+		if (x2 != 0) {
+
+			int x = div(x1, x2);
+			sum = times(x2, x);
+			fsum = minus(x1, sum);
+		} else {
 			return 0;
 		}
 
-		int x = div(x1, x2);
-		int product = times(x2, x);
-		int remainder = minus(x1, product);
+		return fsum;
 
-		return remainder;
 	}
 
-	// Returns the integer part of sqrt(x)
+	// Returns the integer part of sqrt(x)...
 	public static int sqrt(int x) {
-		if (x < 0) {
-			return 0;
-		}
 
+		int sum = 0;
 		int n = 0;
-		while (true) {
-			int next_n = plus(n, 1);
-			int next_n_squared = times(next_n, next_n);
 
-			if (next_n_squared > x) {
-				break;
-			}
-			n = next_n;
+		while (x >= sum) {
+			n++;
+			sum = times(n, n);
+
 		}
 
-		return n;
+		return n - 1;
+
 	}
 }
