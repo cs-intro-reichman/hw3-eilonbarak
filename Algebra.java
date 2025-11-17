@@ -26,38 +26,87 @@ public class Algebra {
 	// Returns x1 + x2
 	public static int plus(int x1, int x2) {
 
-		for (int i = 0; i < x2; i++) {
-
-			x1++;
-
+		if (x2 >= 0) {
+			// הוספת x2 על ידי פעולת ++
+			for (int i = 0; i < x2; i++) {
+				x1++;
+			}
+		} else {
+			// הוספת מספר שלילי על ידי פעולת --
+			int counter = 0;
+			// הלולאה רצה |x2| פעמים
+			while (counter > x2) {
+				x1--;
+				counter--;
+			}
 		}
-
 		return x1;
 	}
 
 	// Returns x1 - x2
 	public static int minus(int x1, int x2) {
 
-		for (int i = 0; i < x2; i++) {
-
-			x1--;
-
+		if (x2 >= 0) {
+			// מקרה 1: x2 אי-שלילי. מחסרים 1 מ-x1, x2 פעמים. (5 - 2 -> 3)
+			for (int i = 0; i < x2; i++) {
+				x1--;
+			}
+		} else {
+			// מקרה 2: x2 שלילי. מוסיפים 1 ל-x1, |x2| פעמים. (5 - (-2) -> 7)
+			int counter = 0;
+			// המונה רץ |x2| פעמים
+			while (counter > x2) {
+				x1++; // הפעולה הנכונה: חיבור
+				counter--;
+			}
 		}
-
 		return x1;
 	}
 
 	// Returns x1 * x2
 	public static int times(int x1, int x2) {
 
-		int Counter = 0;
-
-		for (int i = 0; i < x2; i++) {
-			Counter = plus(Counter, x1);
+		// 1. טיפול במקרה אפס (נארגן מחדש את הבדיקה הזו)
+		if (x1 == 0 || x2 == 0) {
+			return 0;
 		}
 
-		return Counter;
+		// --- שלב 2: הכנה לחישוב ---
 
+		// 2. קביעת הסימן הסופי (True אם התוצאה צריכה להיות שלילית)
+		boolean negativeResult = (x1 < 0) != (x2 < 0);
+
+		// 3. יצירת עותקים של הערכים המוחלטים לעבודה בטוחה בלולאה.
+		// נשתמש ב-minus(0, x) כדי להפוך ערך שלילי לחיובי.
+		int absX1 = x1;
+		if (x1 < 0) {
+			absX1 = minus(0, x1);
+		}
+
+		int absX2 = x2;
+		if (x2 < 0) {
+			absX2 = minus(0, x2);
+		}
+
+		// --- שלב 3: ביצוע הכפל (הלולאה) ---
+
+		int Counter = 0; // מונה התוצאה
+
+		// הלולאה רצה absX2 פעמים, כאשר absX2 הוא חיובי תמיד.
+		for (int i = 0; i < absX2; i++) {
+			Counter = plus(Counter, absX1); // חיבור absX1 עם עצמו
+		}
+
+		// --- שלב 4: סיום והחזרת ערך ---
+
+		// 4. החזרת התוצאה עם הסימן הנכון
+		if (negativeResult) {
+			// אם הסימן צריך להיות שלילי, הופכים אותו
+			return minus(0, Counter);
+		} else {
+			// אחרת, מחזירים את התוצאה החיובית
+			return Counter;
+		}
 	}
 
 	// Returns x^n (for n >= 0)
