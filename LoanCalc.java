@@ -34,7 +34,7 @@ public class LoanCalc {
 
 		for (int i = 0; i < n; i++) {
 
-			currentBalance = (currentBalance - payment) * (1.0 + rate);
+			currentBalance = (currentBalance - payment) * (1.0 + rate / 100.0);
 
 		}
 
@@ -69,9 +69,10 @@ public class LoanCalc {
 	public static double bisectionSolver(double loan, double rate, int n, double epsilon) {
 		double lo = loan / n;
 		double hi = loan;
+		double mid = 0;
 
 		while (hi - lo > epsilon) {
-			double mid = (lo + hi) / 2.0;
+			mid = (lo + hi) / 2.0;
 			double fMid = endBalance(loan, rate, n, mid);
 			double fLo = endBalance(loan, rate, n, lo);
 
@@ -84,6 +85,6 @@ public class LoanCalc {
 			iterationCounter++;
 		}
 
-		return (lo + hi) / 2.0;
+		return mid;
 	}
 }
