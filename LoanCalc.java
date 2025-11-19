@@ -53,9 +53,8 @@ public class LoanCalc {
 		iterationCounter = 0;
 
 		while (endBalance(loan, rate, n, g) > 0) {
-
-			g += epsilon;
 			iterationCounter++;
+			g += epsilon;
 
 		}
 
