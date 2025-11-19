@@ -70,6 +70,7 @@ public class LoanCalc {
 		double lo = loan / n;
 		double hi = loan;
 		double mid = 0;
+		iterationCounter = 0;
 
 		while (hi - lo > epsilon) {
 			mid = (lo + hi) / 2.0;
