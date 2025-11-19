@@ -31,10 +31,11 @@ public class LoanCalc {
 	private static double endBalance(double loan, double rate, int n, double payment) {
 
 		double currentBalance = loan;
+		double monthlyRate = rate / 100.0;
 
 		for (int i = 0; i < n; i++) {
 
-			currentBalance = (currentBalance - payment) * (1.0 + rate);
+			currentBalance = (currentBalance - payment) * (1.0 + monthlyRate);
 
 		}
 
